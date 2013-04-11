@@ -21,6 +21,7 @@ module VagrantPlugins
           env[:machine].config.vm.synced_folders.each do |id, data|
             hostpath  = File.expand_path(data[:hostpath], env[:root_path])
             guestpath = data[:guestpath]
+            next if data[:disabled]
 
             # Make sure there is a trailing slash on the host path to
             # avoid creating an additional directory with rsync
