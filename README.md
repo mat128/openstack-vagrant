@@ -23,7 +23,10 @@ installing, `vagrant up` and specify the `openstack` provider. An example is
 shown below.
 
 ```
-$ vagrant plugin install vagrant-openstack
+$ git clone https://github.com/mat128/vagrant-openstack.git
+$ cd vagrant-openstack
+$ gem build vagrant-openstack.gemspec
+$ vagrant plugin install vagrant-openstack-*.gem
 ...
 $ vagrant up --provider=openstack
 ...
