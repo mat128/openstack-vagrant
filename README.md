@@ -1,14 +1,14 @@
 # Vagrant OpenStack Cloud Provider
 [![Build Status](https://travis-ci.org/mat128/vagrant-openstack.png?branch=master)](https://travis-ci.org/mat128/vagrant-openstack)
 
-This is a [Vagrant](http://www.vagrantup.com) 1.1+ plugin that adds a
+This is a [Vagrant](http://www.vagrantup.com) 1.2+ plugin that adds an
 [OpenStack Cloud](http://www.openstack.org) provider to Vagrant,
 allowing Vagrant to control and provision machines within an OpenStack
 cloud.
 
 This plugin started as a fork of the Vagrant RackSpace provider.
 
-**Note:** This plugin requires Vagrant 1.1+.
+**Note:** This plugin requires Vagrant 1.2+. The last version of this plugin supporting Vagrant 1.1 is 0.3.0.
 
 ## Features
 
@@ -18,10 +18,6 @@ This plugin started as a fork of the Vagrant RackSpace provider.
 * Minimal synced folder support via `rsync`.
 
 ## Usage
-
-Install using standard Vagrant 1.1+ plugin installation methods. After
-installing, `vagrant up` and specify the `openstack` provider. An example is
-shown below.
 
 ```
 $ git clone https://github.com/mat128/vagrant-openstack.git
@@ -44,7 +40,7 @@ manually within a `config.vm.provider` block. So first, add the dummy
 box using any name you want:
 
 ```
-$ vagrant box add dummy https://github.com/cloudbau/vagrant-openstack/raw/master/dummy.box
+$ vagrant box add dummy https://github.com/mat128/vagrant-openstack/raw/master/dummy.box
 ...
 ```
 
