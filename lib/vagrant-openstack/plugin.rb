@@ -6,8 +6,8 @@ end
 
 # This is a sanity check to make sure no one is attempting to install
 # this into an early Vagrant version.
-if Vagrant::VERSION < "1.1.0"
-  raise "OpenStack Cloud provider is only compatible with Vagrant 1.1+"
+if Vagrant::VERSION < "1.2.0"
+  raise "OpenStack Cloud provider is only compatible with Vagrant 1.2+"
 end
 
 module VagrantPlugins
@@ -23,7 +23,7 @@ module VagrantPlugins
         Config
       end
 
-      provider(:openstack) do
+      provider(:openstack, parallel: true) do
         # Setup some things
         OpenStack.init_i18n
         OpenStack.init_logging
