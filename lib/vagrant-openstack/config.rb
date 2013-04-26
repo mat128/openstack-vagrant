@@ -8,8 +8,7 @@ module VagrantPlugins
       # @return [String]
       attr_accessor :api_key
 
-      # The endpoint to access OpenStack. If nil, it will default
-      # to DFW.
+      # The endpoint to access OpenStack.
       #
       # @return [String]
       attr_accessor :endpoint
@@ -49,6 +48,9 @@ module VagrantPlugins
       # @return [String]
       attr_accessor :user_data
 
+      # @return [String]
+      attr_accessor :public_network_name
+
       def initialize
         @api_key  = UNSET_VALUE
         @endpoint = UNSET_VALUE
@@ -59,6 +61,7 @@ module VagrantPlugins
         @keypair_name = UNSET_VALUE
         @ssh_username = UNSET_VALUE
         @user_data = UNSET_VALUE
+        @public_network_name = UNSET_VALUE
       end
 
       def finalize!
@@ -75,8 +78,10 @@ module VagrantPlugins
         # The SSH values by default are nil, and the top-level config
         # `config.ssh` values are used.
         @ssh_username = nil if @ssh_username == UNSET_VALUE
-        
+
         @user_data = "" if @user_data == UNSET_VALUE
+
+        @public_network_name = "public" if @public_network_name == UNSET_VALUE
       end
 
       def validate(machine)

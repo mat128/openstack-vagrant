@@ -1,3 +1,4 @@
+.rspec
 *.gem
 *.rbc
 .bundle

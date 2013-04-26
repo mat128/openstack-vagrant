@@ -1,3 +1,4 @@
+require 'spec_helper'
 require "vagrant-openstack/config"
 
 describe VagrantPlugins::OpenStack::Config do
@@ -18,6 +19,8 @@ describe VagrantPlugins::OpenStack::Config do
     its(:username) { should be_nil }
     its(:keypair_name) { should be_nil }
     its(:ssh_username) { should be_nil }
+    its(:user_data) { should eq("") }
+    its(:public_network_name) { should eq("public") }
   end
 
   describe "overriding defaults" do
@@ -28,9 +31,10 @@ describe VagrantPlugins::OpenStack::Config do
       :server_name,
       :username,
       :keypair_name,
-      :ssh_username].each do |attribute|
+      :ssh_username,
+      :public_network_name].each do |attribute|
       it "should not default #{attribute} if overridden" do
-        subject.send("#{attribute}=".to_sym, "foo")
+        subject.send("#{attribute}=", "foo")
         subject.finalize!
         subject.send(attribute).should == "foo"
       end
