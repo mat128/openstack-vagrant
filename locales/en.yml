@@ -62,6 +62,10 @@ en:
         The server is currently being built. You must wait for this to
         complete before you can access it. You can delete the server, however,
         by running `vagrant destroy`.
+      short_shutoff: |-
+        shutoff
+      long_shutoff: |-
+        The server is shutoff.
       short_error: |-
         error
       long_error: |-
