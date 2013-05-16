@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'vagrant-openstack/action/create_server'
 
 describe VagrantPlugins::OpenStack::Action::CreateServer do
-  describe '#test1' do
+  describe '#server_to_be_available?' do
     subject {
       described_class.new(nil, nil)
     }

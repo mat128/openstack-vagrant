@@ -15,7 +15,7 @@ module VagrantPlugins
           @logger = Log4r::Logger.new("vagrant_openstack::action::create_server")
         end
 
-        def self.server_to_be_available?(server)
+        def server_to_be_available?(server)
           raise if server.state == 'ERROR'
           server.state == 'ACTIVE'
         end
@@ -64,22 +64,21 @@ module VagrantPlugins
             # If we're interrupted don't worry about waiting
             next if env[:interrupted]
 
-            # Set the progress
-            env[:ui].clear_line
-            env[:ui].report_progress(server.progress, 100, false)
-
             # Wait for the server to be ready
             begin
-              server.wait_for(60) { VagrantPlugins::OpenStack::Action::CreateServer.server_to_be_available?(server) }
-            rescue RuntimeError => e
-              # If we don't have an error about a state transition, then
-              # we just move on.
-              raise if e.message !~ /should have transitioned/
+              (1..60).each do |n|
+                env[:ui].clear_line
+                env[:ui].report_progress(n, 60, true)
+                server = env[:openstack_compute].servers.get(env[:machine].id)
+                break if self.server_to_be_available?(server)
+                sleep 1
+              end
+            rescue
               raise Errors::CreateBadState, :state => server.state
             end
           end
 
-          if !env[:interrupted]
+          unless env[:interrupted]
             # Clear the line one more time so the progress is removed
             env[:ui].clear_line
 
