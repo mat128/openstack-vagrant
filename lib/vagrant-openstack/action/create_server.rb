@@ -15,6 +15,11 @@ module VagrantPlugins
           @logger = Log4r::Logger.new("vagrant_openstack::action::create_server")
         end
 
+        def self.server_to_be_available?(server)
+          raise if server.state == 'ERROR'
+          server.state == 'ACTIVE'
+        end
+
         def call(env)
           # Get the configs
           config   = env[:machine].provider_config
@@ -65,7 +70,7 @@ module VagrantPlugins
 
             # Wait for the server to be ready
             begin
-              server.wait_for(60) { ready? }
+              server.wait_for(60) { VagrantPlugins::OpenStack::Action::CreateServer.server_to_be_available?(server) }
             rescue RuntimeError => e
               # If we don't have an error about a state transition, then
               # we just move on.
