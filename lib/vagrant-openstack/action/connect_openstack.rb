@@ -16,17 +16,18 @@ module VagrantPlugins
         def call(env)
           # Get the configs
           config   = env[:machine].provider_config
-          api_key  = config.api_key
-          endpoint = config.endpoint
-          username = config.username
+          openstack_connection_informations = {
+              :provider => :openstack,
+              :openstack_username => config.username,
+              :openstack_api_key => config.api_key,
+              :openstack_auth_url => config.endpoint
+          }
 
-          @logger.info("Connecting to OpenStack...")
-          env[:openstack_compute] = Fog::Compute.new({
-            :provider => :openstack,
-            :openstack_username => username,
-            :openstack_api_key => api_key,
-            :openstack_auth_url => endpoint
-          })
+          @logger.info("Connecting to OpenStack Compute...")
+          env[:openstack_compute] = Fog::Compute.new(openstack_connection_informations)
+
+          @logger.info("Connecting to OpenStack Network...")
+          env[:openstack_network] = Fog::Network.new(openstack_connection_informations)
 
           @app.call(env)
         end

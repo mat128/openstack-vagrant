@@ -8,6 +8,8 @@ en:
       Finding flavor for server...
     finding_image: |-
       Finding image for server...
+    finding_network: |-
+      Finding network for server...
     launching_server: |-
       Launching a server with the following settings...
     not_created: |-
@@ -43,6 +45,9 @@ en:
       no_matching_image: |-
         No matching image was found! Please check your image setting to
         make sure you have a valid image chosen.
+      no_matching_network: |-
+        No matching network was found! Please check your network setting
+        to make sure you have a valid network chosen.
       rsync_error: |-
         There was an error when attemping to rsync a share folder.
         Please inspect the error message below for more info.

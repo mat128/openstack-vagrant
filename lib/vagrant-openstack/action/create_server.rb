@@ -34,6 +34,11 @@ module VagrantPlugins
           image = find_matching(env[:openstack_compute].images, config.image)
           raise Errors::NoMatchingImage if !image
 
+          # Find the networks
+          env[:ui].info(I18n.t("vagrant_openstack.finding_network"))
+          network = find_matching(env[:openstack_network].list_networks[:body]["networks"], config.public_network_name)
+          raise Errors::NoMatchingNetwork if !network
+
           # Figure out the name for the server
           server_name = config.server_name || env[:machine].name
 
@@ -41,6 +46,7 @@ module VagrantPlugins
           env[:ui].info(I18n.t("vagrant_openstack.launching_server"))
           env[:ui].info(" -- Flavor: #{flavor.name}")
           env[:ui].info(" -- Image: #{image.name}")
+          env[:ui].info(" -- Network: #{network['name']}")
           env[:ui].info(" -- Name: #{server_name}")
 
           # Build the options for launching...
@@ -49,7 +55,8 @@ module VagrantPlugins
             :image_ref   => image.id,
             :name        => server_name,
             :key_name    => config.keypair_name,
-            :user_data_encoded => Base64.encode64(config.user_data)
+            :user_data_encoded => Base64.encode64(config.user_data),
+            :nics        => [{"net_id" => network['id']}],
           }
 
           # Create the server
@@ -108,9 +115,13 @@ module VagrantPlugins
         # as well.
         def find_matching(collection, name)
           collection.each do |single|
-            return single if single.id == name
-            return single if single.name == name
-            return single if name.is_a?(Regexp) && name =~ single.name
+            if single.is_a?(Hash)
+              return single if single['name'] == name
+            else
+              return single if single.id == name
+              return single if single.name == name
+              return single if name.is_a?(Regexp) && name =~ single.name
+            end
           end
 
           nil
