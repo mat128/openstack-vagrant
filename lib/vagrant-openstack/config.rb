@@ -13,6 +13,11 @@ module VagrantPlugins
       # @return [String]
       attr_accessor :endpoint
 
+      # Openstack region, if your openstack instance uses these.
+      # Rackspace typically uses these. You need to provide their three letter acronym (for example: DFW)
+      # @return [String]
+      attr_accessor :region
+
       # The flavor of server to launch, either the ID or name. This
       # can also be a regular expression to partially match a name.
       attr_accessor :flavor
@@ -54,6 +59,7 @@ module VagrantPlugins
       def initialize
         @api_key  = UNSET_VALUE
         @endpoint = UNSET_VALUE
+        @region = UNSET_VALUE
         @flavor   = UNSET_VALUE
         @image    = UNSET_VALUE
         @server_name = UNSET_VALUE
@@ -67,6 +73,7 @@ module VagrantPlugins
       def finalize!
         @api_key  = nil if @api_key == UNSET_VALUE
         @endpoint = nil if @endpoint == UNSET_VALUE
+        @region = nil if @region == UNSET_VALUE
         @flavor   = /m1.tiny/ if @flavor == UNSET_VALUE
         @image    = /cirros/ if @image == UNSET_VALUE
         @server_name = nil if @server_name == UNSET_VALUE

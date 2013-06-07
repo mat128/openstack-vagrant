@@ -13,6 +13,7 @@ describe VagrantPlugins::OpenStack::Config do
 
     its(:api_key)  { should be_nil }
     its(:endpoint) { should be_nil }
+    its(:region) { should be_nil }
     its(:flavor)   { should eq(/m1.tiny/) }
     its(:image)    { should eq(/cirros/) }
     its(:server_name) { should be_nil }
@@ -26,6 +27,7 @@ describe VagrantPlugins::OpenStack::Config do
   describe "overriding defaults" do
     [:api_key,
       :endpoint,
+      :region,
       :flavor,
       :image,
       :server_name,
