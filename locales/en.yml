@@ -46,8 +46,8 @@ en:
         No matching image was found! Please check your image setting to
         make sure you have a valid image chosen.
       no_matching_network: |-
-        No matching network was found! Please check your network setting
-        to make sure you have a valid network chosen.
+        No network was found for name "%{network_name}". Please check your
+        network setting to make sure you have a valid network chosen.
       rsync_error: |-
         There was an error when attemping to rsync a share folder.
         Please inspect the error message below for more info.

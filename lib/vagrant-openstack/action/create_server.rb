@@ -36,8 +36,18 @@ module VagrantPlugins
 
           # Find the networks
           env[:ui].info(I18n.t("vagrant_openstack.finding_network"))
-          network = find_matching(env[:openstack_network].list_networks[:body]["networks"], config.public_network_name)
-          raise Errors::NoMatchingNetwork if !network
+          available_networks = env[:openstack_network].list_networks[:body]["networks"]
+          requested_networks = [config.public_network_name] + config.additional_networks
+          effective_networks = []
+
+          for network_name in requested_networks
+            match = find_matching(available_networks, network_name)
+            unless match
+              raise Errors::NoMatchingNetwork,
+                    :network_name => network_name
+            end
+            effective_networks << match
+          end
 
           # Figure out the name for the server
           server_name = config.server_name || env[:machine].name
@@ -46,17 +56,28 @@ module VagrantPlugins
           env[:ui].info(I18n.t("vagrant_openstack.launching_server"))
           env[:ui].info(" -- Flavor: #{flavor.name}")
           env[:ui].info(" -- Image: #{image.name}")
-          env[:ui].info(" -- Network: #{network['name']}")
+          if effective_networks.length > 0
+            env[:ui].info(' -- Network(s): ')
+            for net in effective_networks
+              env[:ui].info("      - #{net['name']}")
+            end
+          end
           env[:ui].info(" -- Name: #{server_name}")
+
+          openstack_nics = []
+
+          for net in effective_networks
+            openstack_nics << {'net_id' => net['id']}
+          end
 
           # Build the options for launching...
           options = {
-            :flavor_ref  => flavor.id,
-            :image_ref   => image.id,
-            :name        => server_name,
-            :key_name    => config.keypair_name,
+            :flavor_ref        => flavor.id,
+            :image_ref         => image.id,
+            :name              => server_name,
+            :key_name          => config.keypair_name,
             :user_data_encoded => Base64.encode64(config.user_data),
-            :nics        => [{"net_id" => network['id']}],
+            :nics              => openstack_nics,
           }
 
           # Create the server
@@ -73,13 +94,15 @@ module VagrantPlugins
 
             # Wait for the server to be ready
             begin
-              (1..60).each do |n|
+              (1..120).each do |n|
                 env[:ui].clear_line
                 env[:ui].report_progress(n, 60, true)
                 server = env[:openstack_compute].servers.get(env[:machine].id)
                 break if self.server_to_be_available?(server)
                 sleep 1
               end
+              server = env[:openstack_compute].servers.get(env[:machine].id)
+              raise unless self.server_to_be_available?(server)
             rescue
               raise Errors::CreateBadState, :state => server.state
             end

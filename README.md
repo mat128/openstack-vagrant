@@ -6,7 +6,7 @@ This is a [Vagrant](http://www.vagrantup.com) 1.2+ plugin that adds an
 allowing Vagrant to control and provision machines within an OpenStack
 cloud.
 
-This plugin started as a fork of the Vagrant RackSpace provider.
+This plugin started as a fork of the Vagrant Rackspace provider.
 
 **Note:** This plugin requires Vagrant 1.2+. The last version of this plugin supporting Vagrant 1.1 is 0.3.0.
 
@@ -16,6 +16,7 @@ This plugin started as a fork of the Vagrant RackSpace provider.
 * SSH into the instances.
 * Provision the instances with any built-in Vagrant provisioner.
 * Minimal synced folder support via `rsync`.
+* Create instances with a specific list of networks
 
 ## Usage
 
@@ -61,6 +62,8 @@ Vagrant.configure("2") do |config|
     os.endpoint = "KEYSTONE AUTH URL"      # "#{ENV['OS_AUTH_URL']}/tokens"  
     os.keypair_name = "YOUR KEYPAIR NAME"
     os.ssh_username = "SSH USERNAME"
+    os.public_network_name = "NAME OF THE PUBLIC NETWORK"
+    os.additional_networks = %w(net1 net2 net3)
   end
 end
 ```
@@ -104,6 +107,9 @@ This provider exposes quite a few provider-specific configuration options:
 * `username` - The username with which to access OpenStack.
 * `keypair_name` - The name of the keypair to access the machine.
 * `ssh_username` - The username to access the machine.
+* `public_network_name` - The name of the public network within your Openstack cluster
+* `additional_networks` - A list -- use %w(net1 net2) -- of networks to configure
+  on your instance.
 
 These can be set like typical provider-specific configuration:
 
@@ -111,9 +117,9 @@ These can be set like typical provider-specific configuration:
 Vagrant.configure("2") do |config|
   # ... other stuff
 
-  config.vm.provider :openstack do |rs|
-    rs.username = "mitchellh"
-    rs.api_key  = "foobarbaz"
+  config.vm.provider :openstack do |os|
+    os.username = "mitchellh"
+    os.api_key  = "foobarbaz"
   end
 end
 ```

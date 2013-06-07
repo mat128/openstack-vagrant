@@ -1,0 +1,19 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+Vagrant.require_plugin('vagrant-openstack')
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu1204-tiny"
+
+  config.vm.provider :openstack do |os|    # e.g.
+    os.username = "bertrandep"          # "#{ENV['OS_USERNAME']}"
+    os.api_key  = "Cybelle1"           # "#{ENV['OS_PASSWORD']}"
+    os.flavor   = /512MB/
+    os.endpoint = "https://identity.api.rackspacecloud.com/v2.0/tokens"      # "#{ENV['OS_AUTH_URL']}/tokens"
+    os.region = "DFW"
+    os.keypair_name = "mmitchell"
+    os.ssh_username = "ubuntu"
+    os.public_network_name = "public"
+    os.image = /Raring/
+  end
+end
