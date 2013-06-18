@@ -25,13 +25,15 @@ module VagrantPlugins
                         :openstack_auth_url => config.endpoint
                     })
 
-          @logger.info("Connecting to OpenStack Network...")
-          env[:openstack_network] = Fog::Network.new({
-                        :provider => :openstack,
-                        :openstack_username => config.username,
-                        :openstack_api_key => config.api_key,
-                        :openstack_auth_url => config.endpoint
-                    })
+          if !config.networks.nil? and config.networks.any?
+            @logger.info("Connecting to OpenStack Network...")
+            env[:openstack_network] = Fog::Network.new({
+                          :provider => :openstack,
+                          :openstack_username => config.username,
+                          :openstack_api_key => config.api_key,
+                          :openstack_auth_url => config.endpoint
+                      })
+          end
 
           @app.call(env)
         end
