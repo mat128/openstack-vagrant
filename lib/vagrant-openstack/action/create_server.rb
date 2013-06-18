@@ -35,18 +35,20 @@ module VagrantPlugins
           raise Errors::NoMatchingImage if !image
 
           # Find the networks
-          env[:ui].info(I18n.t("vagrant_openstack.finding_network"))
-          available_networks = env[:openstack_network].list_networks[:body]["networks"]
-          requested_networks = [config.public_network_name] + config.additional_networks
           effective_networks = []
+          requested_networks = (config.public_network_name == nil ? [] : [config.public_network_name]) + config.additional_networks
+          if requested_networks.any?
+            env[:ui].info(I18n.t("vagrant_openstack.finding_network"))
+            available_networks = env[:openstack_network].list_networks[:body]["networks"]
 
-          for network_name in requested_networks
-            match = find_matching(available_networks, network_name)
-            unless match
-              raise Errors::NoMatchingNetwork,
-                    :network_name => network_name
+            for network_name in requested_networks
+              match = find_matching(available_networks, network_name)
+              unless match
+                raise Errors::NoMatchingNetwork,
+                      :network_name => network_name
+              end
+              effective_networks << match
             end
-            effective_networks << match
           end
 
           # Figure out the name for the server
@@ -56,7 +58,7 @@ module VagrantPlugins
           env[:ui].info(I18n.t("vagrant_openstack.launching_server"))
           env[:ui].info(" -- Flavor: #{flavor.name}")
           env[:ui].info(" -- Image: #{image.name}")
-          if effective_networks.length > 0
+          if effective_networks.any?
             env[:ui].info(' -- Network(s): ')
             for net in effective_networks
               env[:ui].info("      - #{net['name']}")
@@ -77,8 +79,11 @@ module VagrantPlugins
             :name              => server_name,
             :key_name          => config.keypair_name,
             :user_data_encoded => Base64.encode64(config.user_data),
-            :nics              => openstack_nics,
           }
+
+          if openstack_nics.any?
+            options[:nics] = openstack_nics
+          end
 
           # Create the server
           server = env[:openstack_compute].servers.create(options)
