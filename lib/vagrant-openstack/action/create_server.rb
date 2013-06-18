@@ -36,12 +36,11 @@ module VagrantPlugins
 
           # Find the networks
           effective_networks = []
-          requested_networks = (config.public_network_name == nil ? [] : [config.public_network_name]) + config.additional_networks
-          if requested_networks.any?
+          if !config.networks.nil? and config.networks.any?
             env[:ui].info(I18n.t("vagrant_openstack.finding_network"))
             available_networks = env[:openstack_network].list_networks[:body]["networks"]
 
-            for network_name in requested_networks
+            for network_name in config.networks
               match = find_matching(available_networks, network_name)
               unless match
                 raise Errors::NoMatchingNetwork,
