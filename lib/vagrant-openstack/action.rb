@@ -45,7 +45,6 @@ module VagrantPlugins
           b.use ConfigValidate
           b.use CheckCreated
           b.use SSHExec
-          end
         end
       end
 
@@ -80,7 +79,6 @@ module VagrantPlugins
           b.use CheckCreated
           b.use Provision
           b.use SyncFolders
-          end
         end
       end
 
