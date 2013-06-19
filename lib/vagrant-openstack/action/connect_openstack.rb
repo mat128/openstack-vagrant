@@ -22,7 +22,8 @@ module VagrantPlugins
                         :openstack_region => config.region,
                         :openstack_username => config.username,
                         :openstack_api_key => config.api_key,
-                        :openstack_auth_url => config.endpoint
+                        :openstack_auth_url => config.endpoint,
+                        :openstack_tenant => config.tenant
                     })
 
           if !config.networks.nil? and config.networks.any?
