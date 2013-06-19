@@ -59,6 +59,9 @@ module VagrantPlugins
       # @return [String]
       attr_accessor :networks
 
+      # @return [String]
+      attr_accessor :tenant
+
       def initialize
         @api_key  = UNSET_VALUE
         @endpoint = UNSET_VALUE
@@ -72,6 +75,7 @@ module VagrantPlugins
         @user_data = UNSET_VALUE
         @public_network_name = UNSET_VALUE
         @networks = UNSET_VALUE
+        @tenant = UNSET_VALUE
       end
 
       def finalize!
@@ -94,6 +98,7 @@ module VagrantPlugins
 
         @public_network_name = "public" if @public_network_name == UNSET_VALUE
         @networks = [@public_network_name] if @networks == UNSET_VALUE
+        @tenant = nil if @tenant == UNSET_VALUE
       end
 
       def validate(machine)

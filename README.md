@@ -64,6 +64,7 @@ Vagrant.configure("2") do |config|
     os.ssh_username = "SSH USERNAME"
     os.public_network_name = "NAME OF THE PUBLIC NETWORK"
     os.networks = %w(net1 net2 net3)
+    os.tenant = "NAME OF THE TENANT"
   end
 end
 ```
@@ -110,6 +111,7 @@ This provider exposes quite a few provider-specific configuration options:
 * `public_network_name` - The name of the public network within your Openstack cluster
 * `networks` - A list -- use %w(net1 net2) -- of networks to configure
   on your instance.
+* `tenant` - The name of the tenant on which the virtual machine should spawn.
 
 These can be set like typical provider-specific configuration:
 
