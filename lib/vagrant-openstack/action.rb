@@ -12,9 +12,15 @@ module VagrantPlugins
       def self.action_destroy
         Vagrant::Action::Builder.new.tap do |b|
           b.use ConfigValidate
-          b.use CheckCreated
-          b.use ConnectOpenStack
-          b.use DeleteServer
+          b.use Call, IsCreated do |env, b2|
+            if !env[:result]
+              b2.use MessageNotCreated
+              next
+            end
+
+            b2.use ConnectOpenStack
+            b2.use DeleteServer
+          end
         end
       end
 
@@ -43,16 +49,28 @@ module VagrantPlugins
       def self.action_ssh
         Vagrant::Action::Builder.new.tap do |b|
           b.use ConfigValidate
-          b.use CheckCreated
-          b.use SSHExec
+          b.use Call, IsCreated do |env, b2|
+            if !env[:result]
+              b2.use MessageNotCreated
+              next
+            end
+
+            b2.use SSHExec
+          end
         end
       end
 
       def self.action_ssh_run
         Vagrant::Action::Builder.new.tap do |b|
           b.use ConfigValidate
-          b.use CheckCreated
-          b.use SSHRun
+          b.use Call, IsCreated do |env, b2|
+            if !env[:result]
+              b2.use MessageNotCreated
+              next
+            end
+
+            b2.use SSHRun
+          end
         end
       end
 
@@ -60,15 +78,18 @@ module VagrantPlugins
         Vagrant::Action::Builder.new.tap do |b|
           b.use HandleBoxUrl
           b.use ConfigValidate
-          b.use Call, Created do |env, b2|
-            unless env[:result]
-              b2.use ConnectOpenStack
-              b2.use Provision
-              b2.use SyncFolders
-              b2.use SetHostname
-              b2.use WarnNetworks
-              b2.use CreateServer
+          b.use Call, IsCreated do |env, b2|
+            if env[:result]
+              b2.use MessageAlreadyCreated
+              next
             end
+
+            b2.use ConnectOpenStack
+            b2.use Provision
+            b2.use SyncFolders
+            b2.use SetHostname
+            b2.use WarnNetworks
+            b2.use CreateServer
           end
         end
       end
@@ -76,9 +97,15 @@ module VagrantPlugins
       def self.action_provision
         Vagrant::Action::Builder.new.tap do |b|
           b.use ConfigValidate
-          b.use CheckCreated
-          b.use Provision
-          b.use SyncFolders
+          b.use Call, IsCreated do |env, b2|
+            if !env[:result]
+              b2.use MessageNotCreated
+              next
+            end
+
+            b2.use Provision
+            b2.use SyncFolders
+          end
         end
       end
 
@@ -87,8 +114,9 @@ module VagrantPlugins
       autoload :ConnectOpenStack, action_root.join("connect_openstack")
       autoload :CreateServer, action_root.join("create_server")
       autoload :DeleteServer, action_root.join("delete_server")
-      autoload :Created, action_root.join("created")
-      autoload :CheckCreated, action_root.join("check_created")
+      autoload :IsCreated, action_root.join("is_created")
+      autoload :MessageAlreadyCreated, action_root.join("message_already_created")
+      autoload :MessageNotCreated, action_root.join("message_not_created")
       autoload :ReadSSHInfo, action_root.join("read_ssh_info")
       autoload :ReadState, action_root.join("read_state")
       autoload :SyncFolders, action_root.join("sync_folders")

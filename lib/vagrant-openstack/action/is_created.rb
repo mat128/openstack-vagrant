@@ -1,7 +1,7 @@
 module VagrantPlugins
   module OpenStack
     module Action
-      class Created
+      class IsCreated
         def initialize(app, env)
           @app = app
         end

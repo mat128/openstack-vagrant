@@ -1,15 +1,13 @@
 module VagrantPlugins
   module OpenStack
     module Action
-      class CheckCreated
+      class MessageAlreadyCreated
         def initialize(app, env)
           @app = app
         end
 
         def call(env)
-          if env[:machine].state.id != :not_created
-            raise Vagrant::Errors::VMNotCreatedError
-          end
+          env[:ui].info(I18n.t("vagrant_openstack.already_created"))
           @app.call(env)
         end
       end

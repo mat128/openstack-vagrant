@@ -1,5 +1,7 @@
 en:
   vagrant_openstack:
+    already_created: |-
+      The server is already created.
     deleting_server: |-
       Deleting server...
     finding_flavor: |-
@@ -10,6 +12,8 @@ en:
       Finding network for server...
     launching_server: |-
       Launching a server with the following settings...
+    not_created: |-
+      The server hasn't been created yet. Run `vagrant up` first.
     ready: |-
       The server is ready!
     rsync_folder: |-
