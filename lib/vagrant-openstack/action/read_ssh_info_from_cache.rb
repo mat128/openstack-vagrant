@@ -23,7 +23,7 @@ module VagrantPlugins
         def call(env)
           ssh_info = read_ssh_info(env[:machine])
           
-          if ssh_info[:host] != nil
+          if ssh_info and ssh_info[:host] != nil
             env[:machine_ssh_info] = ssh_info
           end 
           @app.call(env)
