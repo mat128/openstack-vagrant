@@ -30,8 +30,12 @@ module VagrantPlugins
       def self.action_read_ssh_info
         Vagrant::Action::Builder.new.tap do |b|
           b.use ConfigValidate
-          b.use ConnectOpenStack
-          b.use ReadSSHInfo
+          b.use Call, ReadSSHInfoFromCache do |env, b2|
+            if !env[:machine_ssh_info]
+              b2.use ConnectOpenStack
+              b2.use ReadSSHInfoFromAPI
+            end
+          end
         end
       end
 
@@ -117,7 +121,8 @@ module VagrantPlugins
       autoload :IsCreated, action_root.join("is_created")
       autoload :MessageAlreadyCreated, action_root.join("message_already_created")
       autoload :MessageNotCreated, action_root.join("message_not_created")
-      autoload :ReadSSHInfo, action_root.join("read_ssh_info")
+      autoload :ReadSSHInfoFromAPI, action_root.join("read_ssh_info_from_api")
+      autoload :ReadSSHInfoFromCache, action_root.join("read_ssh_info_from_cache")
       autoload :ReadState, action_root.join("read_state")
       autoload :SyncFolders, action_root.join("sync_folders")
       autoload :WarnNetworks, action_root.join("warn_networks")

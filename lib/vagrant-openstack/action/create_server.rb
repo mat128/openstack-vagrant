@@ -1,5 +1,6 @@
 require "fog"
 require "log4r"
+require "json"
 
 require 'vagrant/util/retryable'
 
@@ -120,6 +121,10 @@ module VagrantPlugins
             rescue
               raise Errors::CreateBadState, :state => server.state
             end
+          end
+
+          env[:machine].data_dir.join("cached_metadata").open("w+") do |f|
+            f.write(server.to_json)
           end
 
           unless env[:interrupted]

@@ -1,4 +1,6 @@
 .rspec
+.idea
+*.iml
 *.gem
 *.rbc
 .bundle
