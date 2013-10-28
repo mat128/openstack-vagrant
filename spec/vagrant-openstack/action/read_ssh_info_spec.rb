@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'vagrant-openstack/action/read_ssh_info'
+require 'vagrant-openstack/action/read_ssh_info_from_api'
 
-describe VagrantPlugins::OpenStack::Action::ReadSSHInfo do
+describe VagrantPlugins::OpenStack::Action::ReadSSHInfoFromAPI do
   describe '#call' do
     it "passes proper parameters to read_ssh_info and puts them in machine_ssh_info" do
       app = lambda { |only_one_parameter| }
