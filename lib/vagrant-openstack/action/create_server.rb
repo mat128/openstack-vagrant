@@ -29,9 +29,11 @@ module VagrantPlugins
             @logger.info("Connecting to OpenStack Network...")
             env[:openstack_network] = Fog::Network.new({
                           :provider => :openstack,
+                          :openstack_region => config.region,
                           :openstack_username => config.username,
                           :openstack_api_key => config.api_key,
-                          :openstack_auth_url => config.endpoint
+                          :openstack_auth_url => config.endpoint,
+                          :openstack_tenant => config.tenant
                       })
           end
 
