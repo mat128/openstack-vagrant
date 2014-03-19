@@ -65,6 +65,7 @@ Vagrant.configure("2") do |config|
     os.public_network_name = "NAME OF THE PUBLIC NETWORK"
     os.networks = %w(net1 net2 net3)
     os.tenant = "NAME OF THE TENANT"
+    os.region = "REGION_NAME"
   end
 end
 ```
