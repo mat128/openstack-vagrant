@@ -37,6 +37,13 @@ module VagrantPlugins
               "chown #{ssh_info[:username]} '#{guestpath}'")
 
             # Rsync over to the guest path using the SSH info
+            if env[:machine].config.ssh.proxy_command
+              proxy_cmd = "-o ProxyCommand='#{env[:machine].config.ssh.proxy_command}'"
+            else
+              proxy_cmd = ''
+            end
+            
+            # Rsync over to the guest path using the SSH info
             command = [
               "rsync", "--verbose", "--archive", "--compress", "--delete",
               "-e", "ssh -p #{ssh_info[:port]} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null #{proxy_cmd} #{ssh_key_options(ssh_info)}",
