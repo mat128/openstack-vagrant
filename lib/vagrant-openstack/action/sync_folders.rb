@@ -39,7 +39,7 @@ module VagrantPlugins
             # Rsync over to the guest path using the SSH info
             command = [
               "rsync", "--verbose", "--archive", "--compress", "--delete",
-              "-e", "ssh -p #{ssh_info[:port]} -i '#{ssh_info[:private_key_path][0]}' -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null",
+              "-e", "ssh -p #{ssh_info[:port]} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null #{proxy_cmd} #{ssh_key_options(ssh_info)}",
               hostpath,
               "#{ssh_info[:username]}@#{ssh_info[:host]}:#{guestpath}"]
 
@@ -51,6 +51,13 @@ module VagrantPlugins
                 :stderr => r.stderr
             end
           end
+        end
+        
+        private
+
+        def ssh_key_options(ssh_info)
+          # Ensure that `private_key_path` is an Array (for Vagrant < 1.4)
+          Array(ssh_info[:private_key_path]).map { |path| "-i '#{path}' " }.join
         end
       end
     end
