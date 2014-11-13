@@ -35,7 +35,7 @@ module VagrantPlugins
       #
       # @return [String]
       attr_accessor :username
-      
+
       # The name of the keypair to use.
       #
       # @return [String]
@@ -52,6 +52,11 @@ module VagrantPlugins
       #
       # @return [String]
       attr_accessor :user_data
+
+      # Metadata to be sent to the newly created OpenStack instance.
+      #
+      # @return [Hash]
+      attr_accessor :metadata
 
       # @return [String]
       attr_accessor :public_network_name
@@ -73,6 +78,7 @@ module VagrantPlugins
         @keypair_name = UNSET_VALUE
         @ssh_username = UNSET_VALUE
         @user_data = UNSET_VALUE
+        @metadata = UNSET_VALUE
         @public_network_name = UNSET_VALUE
         @networks = UNSET_VALUE
         @tenant = UNSET_VALUE
@@ -89,12 +95,13 @@ module VagrantPlugins
 
         # Keypair defaults to nil
         @keypair_name = nil if @keypair_name == UNSET_VALUE
-        
+
         # The SSH values by default are nil, and the top-level config
         # `config.ssh` values are used.
         @ssh_username = nil if @ssh_username == UNSET_VALUE
 
         @user_data = "" if @user_data == UNSET_VALUE
+        @metadata = {} if @metadata == UNSET_VALUE
 
         @public_network_name = "public" if @public_network_name == UNSET_VALUE
         @networks = [@public_network_name] if @networks == UNSET_VALUE
@@ -106,7 +113,7 @@ module VagrantPlugins
 
         errors << I18n.t("vagrant_openstack.config.api_key_required") if !@api_key
         errors << I18n.t("vagrant_openstack.config.username_required") if !@username
-        
+
         { "OpenStack Provider" => errors }
       end
     end

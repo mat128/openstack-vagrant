@@ -91,6 +91,7 @@ module VagrantPlugins
             :name              => server_name,
             :key_name          => config.keypair_name,
             :user_data_encoded => Base64.encode64(config.user_data),
+            :metadata          => config.metadata,
           }
 
           if openstack_nics.any?

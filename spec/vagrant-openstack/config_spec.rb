@@ -21,6 +21,7 @@ describe VagrantPlugins::OpenStack::Config do
     its(:keypair_name) { should be_nil }
     its(:ssh_username) { should be_nil }
     its(:user_data) { should eq("") }
+    its(:metadata) { should eq({}) }
     its(:public_network_name) { should eq("public") }
     its(:networks) { should eq(["public"]) }
     its(:tenant) { should be_nil }
@@ -36,6 +37,7 @@ describe VagrantPlugins::OpenStack::Config do
       :username,
       :keypair_name,
       :ssh_username,
+      :metadata,
       :public_network_name,
       :networks,
       :tenant].each do |attribute|
