@@ -92,7 +92,6 @@ module VagrantPlugins
             b2.use Provision
             b2.use SyncFolders
             b2.use SetHostname
-            b2.use WarnNetworks
             b2.use CreateServer
           end
         end
@@ -125,7 +124,6 @@ module VagrantPlugins
       autoload :ReadSSHInfoFromCache, action_root.join("read_ssh_info_from_cache")
       autoload :ReadState, action_root.join("read_state")
       autoload :SyncFolders, action_root.join("sync_folders")
-      autoload :WarnNetworks, action_root.join("warn_networks")
     end
   end
 end

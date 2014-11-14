@@ -22,10 +22,6 @@ en:
       Waiting for the server to be built...
     waiting_for_ssh: |-
       Waiting for SSH to become available...
-    warn_networks: |-
-      Warning! The OpenStack provider doesn't support any of the Vagrant
-      high-level network configurations (`config.vm.network`). They
-      will be silently ignored.
 
     config:
       api_key_required: |-
