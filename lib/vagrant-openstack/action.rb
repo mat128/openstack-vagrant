@@ -58,7 +58,7 @@ module VagrantPlugins
 
       def self.action_up
         Vagrant::Action::Builder.new.tap do |b|
-          b.use HandleBoxUrl
+          b.use defined?(HandleBox) ? HandleBox : HandleBoxUrl
           b.use ConfigValidate
           b.use Call, Created do |env, b2|
             unless env[:result]
