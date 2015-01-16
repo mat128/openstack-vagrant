@@ -105,6 +105,7 @@ module VagrantPlugins
           env[:machine].id = server.id
 
           # Wait for the server to finish building
+          env[:ui].info("Instance UUID: #{env[:machine].id}")
           env[:ui].info(I18n.t("vagrant_openstack.waiting_for_build"))
           retryable(:on => Timeout::Error, :tries => 200) do
             # If we're interrupted don't worry about waiting
@@ -114,7 +115,7 @@ module VagrantPlugins
             begin
               (1..120).each do |n|
                 env[:ui].clear_line
-                env[:ui].report_progress(n, 60, true)
+                env[:ui].report_progress(n, 120, true)
                 server = env[:openstack_compute].servers.get(env[:machine].id)
                 break if self.server_to_be_available?(server)
                 sleep 1
