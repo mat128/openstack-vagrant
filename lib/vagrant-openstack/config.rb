@@ -67,6 +67,9 @@ module VagrantPlugins
       # @return [String]
       attr_accessor :tenant
 
+      # @return [Hash]
+      attr_accessor :scheduler_hints
+
       def initialize
         @api_key  = UNSET_VALUE
         @endpoint = UNSET_VALUE
@@ -82,6 +85,7 @@ module VagrantPlugins
         @public_network_name = UNSET_VALUE
         @networks = UNSET_VALUE
         @tenant = UNSET_VALUE
+        @scheduler_hints = UNSET_VALUE
       end
 
       def finalize!
@@ -106,6 +110,7 @@ module VagrantPlugins
         @public_network_name = "public" if @public_network_name == UNSET_VALUE
         @networks = [@public_network_name] if @networks == UNSET_VALUE
         @tenant = nil if @tenant == UNSET_VALUE
+        @scheduler_hints = {} if @scheduler_hints == UNSET_VALUE
       end
 
       def validate(machine)

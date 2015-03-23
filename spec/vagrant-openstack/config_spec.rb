@@ -25,6 +25,7 @@ describe VagrantPlugins::OpenStack::Config do
     its(:public_network_name) { should eq("public") }
     its(:networks) { should eq(["public"]) }
     its(:tenant) { should be_nil }
+    its(:scheduler_hints) { should eq({}) }
   end
 
   describe "overriding defaults" do
@@ -40,7 +41,8 @@ describe VagrantPlugins::OpenStack::Config do
       :metadata,
       :public_network_name,
       :networks,
-      :tenant].each do |attribute|
+      :tenant,
+      :scheduler_hints].each do |attribute|
       it "should not default #{attribute} if overridden" do
         subject.send("#{attribute}=", "foo")
         subject.finalize!

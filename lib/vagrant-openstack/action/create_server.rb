@@ -86,12 +86,13 @@ module VagrantPlugins
 
           # Build the options for launching...
           options = {
-            :flavor_ref        => flavor.id,
-            :image_ref         => image.id,
-            :name              => server_name,
-            :key_name          => config.keypair_name,
-            :user_data_encoded => Base64.encode64(config.user_data),
-            :metadata          => config.metadata,
+            :flavor_ref         => flavor.id,
+            :image_ref          => image.id,
+            :name               => server_name,
+            :key_name           => config.keypair_name,
+            :user_data_encoded  => Base64.encode64(config.user_data),
+            :metadata           => config.metadata,
+            :os_scheduler_hints => config.scheduler_hints
           }
 
           if openstack_nics.any?
