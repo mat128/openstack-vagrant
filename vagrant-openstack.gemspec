@@ -14,8 +14,8 @@ Gem::Specification.new do |gem|
 
   gem.add_runtime_dependency "fog", "~> 1.22"
 
-  gem.add_development_dependency "rake"
-  gem.add_development_dependency "rspec", "~> 2.13.0"
+  gem.add_development_dependency "rake", "~> 0"
+  gem.add_development_dependency "rspec", "~> 2.13"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
