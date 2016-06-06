@@ -135,26 +135,32 @@ module VagrantPlugins
           unless env[:interrupted]
             # Clear the line one more time so the progress is removed
             env[:ui].clear_line
-
-            # Wait for SSH to become available
-            env[:ui].info(I18n.t("vagrant_openstack.waiting_for_ssh"))
-            while true
-              begin
-                # If we're interrupted then just back out
-                break if env[:interrupted]
-                break if env[:machine].communicate.ready?
-              rescue Errno::ENETUNREACH
-              end
-              sleep 2
-            end
-
+            ssh_is_responding?(env)
             env[:ui].info(I18n.t("vagrant_openstack.ready"))
           end
 
           @app.call(env)
         end
-
         protected
+
+        def ssh_responding?(env)
+           begin
+             # Wait for SSH to become available
+             env[:ui].info(I18n.t("vagrant_openstack.waiting_for_ssh"))
+             (1..60).each do |n|
+               begin
+                 # If we're interrupted then just back out
+                 break if env[:interrupted]
+                 break if env[:machine].communicate.ready?
+               rescue Errno::ENETUNREACH
+               end
+               sleep 2
+             end
+             raise unless env[:machine].communicate.ready?
+           rescue
+             raise Errors::SshUnavailable
+           end
+        end
 
         # This method finds a matching _thing_ in a collection of
         # _things_. This works matching if the ID or NAME equals to

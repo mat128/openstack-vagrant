@@ -1,3 +1,4 @@
+require_relative '../lib/vagrant-openstack/errors'
 require 'simplecov'
 SimpleCov.start
 
