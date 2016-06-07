@@ -21,10 +21,10 @@ This plugin started as a fork of the Vagrant Rackspace provider.
 ## Usage
 
 ```
-$ git clone https://github.com/mat128/vagrant-openstack.git
-$ cd vagrant-openstack
-$ gem build vagrant-openstack.gemspec
-$ vagrant plugin install vagrant-openstack-*.gem
+$ git clone https://github.com/mat128/openstack-vagrant.git
+$ cd openstack-vagrant
+$ gem build openstack-vagrant.gemspec
+$ vagrant plugin install openstack-vagrant-*.gem
 ...
 $ vagrant up --provider=openstack
 ...
@@ -41,7 +41,7 @@ manually within a `config.vm.provider` block. So first, add the dummy
 box using any name you want:
 
 ```
-$ vagrant box add dummy https://github.com/mat128/vagrant-openstack/raw/master/dummy.box
+$ vagrant box add dummy https://github.com/mat128/openstack-vagrant/raw/master/dummy.box
 ...
 ```
 
@@ -49,7 +49,7 @@ And then make a Vagrantfile that looks like the following, filling in
 your information where necessary.
 
 ```
-require 'vagrant-openstack'
+require 'openstack-vagrant'
 
 Vagrant.configure("2") do |config|
   config.vm.box = "dummy"
@@ -84,7 +84,7 @@ no preconfigured defaults.
 
 Every provider in Vagrant must introduce a custom box format. This
 provider introduces `openstack` boxes. You can view an example box in
-the [example_box/ directory](https://github.com/cloudbau/vagrant-openstack/tree/master/example_box).
+the [example_box/ directory](https://github.com/mat128/openstack-vagrant/tree/master/example_box).
 That directory also contains instructions on how to build a box.
 
 The box format is basically just the required `metadata.json` file
