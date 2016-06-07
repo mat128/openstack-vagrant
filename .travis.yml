@@ -1,3 +1,11 @@
 sudo: false
 rvm:
- - 2.0.0
+- 2.0.0
+deploy:
+  provider: rubygems
+  api_key:
+    secure: D4lNAf8yFYcAJH0A6pmDjSMKxNgYZI2etr1dWeK/IWUOY21Q+G9+QkgeDFvIIzWxyKRCg8ONAmDw5Sav74CJsY+8uDNqxTvfnaJ+l3fRGHJiOpLWvBY/uRh8jGdgtuPf+cVqwYKYZxE2siHh7NI8pOBdAqLVou9CSO1Ab8ZVJdc=
+  gem: openstack-vagrant
+  on:
+    tags: true
+    repo: mat128/openstack-vagrant
