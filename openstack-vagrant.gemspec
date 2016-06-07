@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'vagrant-openstack/version'
 
 Gem::Specification.new do |gem|
-  gem.name          = "vagrant-openstack"
+  gem.name          = "openstack-vagrant"
   gem.version       = VagrantPlugins::OpenStack::VERSION
   gem.authors       = ["Mitchell Hashimoto"]
   gem.email         = ["mitchell@hashicorp.com"]
