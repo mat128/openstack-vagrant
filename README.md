@@ -1,5 +1,5 @@
 # Vagrant OpenStack Cloud Provider
-[![Build Status](https://travis-ci.org/mat128/vagrant-openstack.png?branch=master)](https://travis-ci.org/mat128/vagrant-openstack)
+[![Build Status](https://travis-ci.org/mat128/openstack-vagrant.png?branch=master)](https://travis-ci.org/mat128/openstack-vagrant)
 
 This is a [Vagrant](http://www.vagrantup.com) 1.2+ plugin that adds an
 [OpenStack Cloud](http://www.openstack.org) provider to Vagrant,
