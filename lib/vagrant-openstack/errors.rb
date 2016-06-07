@@ -11,6 +11,10 @@ module VagrantPlugins
         error_key(:create_bad_state)
       end
 
+      class SshUnavailable < VagrantOpenStackError
+        error_key(:ssh_unavailable)
+      end
+
       class NoMatchingFlavor < VagrantOpenStackError
         error_key(:no_matching_flavor)
       end

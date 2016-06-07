@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'vagrant-openstack/errors'
 require 'vagrant-openstack/action/create_server'
 
 describe VagrantPlugins::OpenStack::Action::CreateServer do
@@ -17,6 +18,32 @@ describe VagrantPlugins::OpenStack::Action::CreateServer do
     it "should raise when the server state is ERROR" do
       server.stub(:state).and_return('ERROR')
       expect { subject.server_to_be_available?(server) }.to raise_error(RuntimeError)
+    end
+  end
+
+  describe '#ssh_responding?' do
+    subject {
+      described_class.new(nil, nil)
+    }
+
+    let(:ui) { double }
+    let(:machine) { double }
+    let(:communicate) { double }
+
+    it "should continue if ssh is available" do
+      ui.stub(:info)
+      communicate.stub(:ready?).and_return(true)
+      machine.stub(:communicate).and_return(communicate)
+      env = { :ui => ui, :interrupted => false, :machine => machine }
+      subject.send('ssh_responding?', env)
+    end
+
+    it "should raise if ssh isn't available" do
+      ui.stub(:info)
+      communicate.stub(:ready?).and_return(false)
+      machine.stub(:communicate).and_return(communicate)
+      env = { :ui => ui, :interrupted => false, :machine => machine }
+      expect { subject.send('ssh_responding?', env) }.to raise_error(VagrantPlugins::OpenStack::Errors::SshUnavailable)
     end
   end
 
