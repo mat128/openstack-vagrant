@@ -1,5 +1,5 @@
 require 'spec_helper'
-require "vagrant-openstack/config"
+require "vagrant-openstack-cloud-provider/config"
 
 describe VagrantPlugins::OpenStack::Config do
   describe "defaults" do

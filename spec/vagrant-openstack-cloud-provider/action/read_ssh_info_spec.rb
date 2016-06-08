@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'vagrant-openstack/action/read_ssh_info_from_api'
+require 'vagrant-openstack-cloud-provider/action/read_ssh_info_from_api'
 
 describe VagrantPlugins::OpenStack::Action::ReadSSHInfoFromAPI do
   describe '#call' do

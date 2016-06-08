@@ -1,6 +1,6 @@
 require 'spec_helper'
-require 'vagrant-openstack/errors'
-require 'vagrant-openstack/action/create_server'
+require 'vagrant-openstack-cloud-provider/errors'
+require 'vagrant-openstack-cloud-provider/action/create_server'
 
 describe VagrantPlugins::OpenStack::Action::CreateServer do
   describe '#server_to_be_available?' do

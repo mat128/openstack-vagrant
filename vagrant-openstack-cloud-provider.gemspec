@@ -1,10 +1,10 @@
 # -*- encoding: utf-8 -*-
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'vagrant-openstack/version'
+require 'vagrant-openstack-cloud-provider/version'
 
 Gem::Specification.new do |gem|
-  gem.name          = "openstack-vagrant"
+  gem.name          = "vagrant-openstack-cloud-provider"
   gem.version       = VagrantPlugins::OpenStack::VERSION
   gem.licenses      = ['MIT']
   gem.authors       = ["Mathieu Mitchell"]

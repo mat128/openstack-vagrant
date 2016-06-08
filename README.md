@@ -1,5 +1,5 @@
 # Vagrant OpenStack Cloud Provider
-[![Build Status](https://travis-ci.org/mat128/openstack-vagrant.png?branch=master)](https://travis-ci.org/mat128/openstack-vagrant)
+[![Build Status](https://travis-ci.org/mat128/vagrant-openstack-cloud-provider.png?branch=master)](https://travis-ci.org/mat128/vagrant-openstack-cloud-provider)
 
 This is a [Vagrant](http://www.vagrantup.com) 1.2+ plugin that adds an
 [OpenStack Cloud](http://www.openstack.org) provider to Vagrant,
@@ -21,10 +21,10 @@ This plugin started as a fork of the Vagrant Rackspace provider.
 ## Usage
 
 ```
-$ git clone https://github.com/mat128/openstack-vagrant.git
-$ cd openstack-vagrant
-$ gem build openstack-vagrant.gemspec
-$ vagrant plugin install openstack-vagrant-*.gem
+$ git clone https://github.com/mat128/vagrant-openstack-cloud-provider.git
+$ cd vagrant-openstack-cloud-provider
+$ gem build vagrant-openstack-cloud-provider.gemspec
+$ vagrant plugin install vagrant-openstack-cloud-provider-*.gem
 ...
 $ vagrant up --provider=openstack
 ...
@@ -41,7 +41,7 @@ manually within a `config.vm.provider` block. So first, add the dummy
 box using any name you want:
 
 ```
-$ vagrant box add dummy https://github.com/mat128/openstack-vagrant/raw/master/dummy.box
+$ vagrant box add dummy https://github.com/mat128/vagrant-openstack-cloud-provider/raw/master/dummy.box
 ...
 ```
 
@@ -49,7 +49,7 @@ And then make a Vagrantfile that looks like the following, filling in
 your information where necessary.
 
 ```
-require 'openstack-vagrant'
+require 'vagrant-openstack-cloud-provider'
 
 Vagrant.configure("2") do |config|
   config.vm.box = "dummy"
@@ -84,7 +84,7 @@ no preconfigured defaults.
 
 Every provider in Vagrant must introduce a custom box format. This
 provider introduces `openstack` boxes. You can view an example box in
-the [example_box/ directory](https://github.com/mat128/openstack-vagrant/tree/master/example_box).
+the [example_box/ directory](https://github.com/mat128/vagrant-openstack-cloud-provider/tree/master/example_box).
 That directory also contains instructions on how to build a box.
 
 The box format is basically just the required `metadata.json` file

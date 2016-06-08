@@ -1,6 +1,6 @@
 require "vagrant"
 
-require "vagrant-openstack/action"
+require "vagrant-openstack-cloud-provider/action"
 
 module VagrantPlugins
   module OpenStack
