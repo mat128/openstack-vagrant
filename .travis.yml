@@ -4,8 +4,8 @@ rvm:
 deploy:
   provider: rubygems
   api_key:
-    secure: D4lNAf8yFYcAJH0A6pmDjSMKxNgYZI2etr1dWeK/IWUOY21Q+G9+QkgeDFvIIzWxyKRCg8ONAmDw5Sav74CJsY+8uDNqxTvfnaJ+l3fRGHJiOpLWvBY/uRh8jGdgtuPf+cVqwYKYZxE2siHh7NI8pOBdAqLVou9CSO1Ab8ZVJdc=
-  gem: openstack-vagrant
+    secure: F5wfYwDeMrpiTpyq1V7Zrk1HygxH1NXB/9qD5CyLNsZlKWXKTNv94aTgOjjeUdu5NpNv+IwH7IAzKTvpxE9P1fcGNqBAy0KQ5uIBGqNi0kHphl82S+zpYeLacfPFm2cgz0rPI0hpRXmp3ZnXY1QiFmZs1BGOHc5bah01DHC0Euo=
+  gem: vagrant-openstack-cloud-provider
   on:
     tags: true
-    repo: mat128/openstack-vagrant
+    repo: mat128/vagrant-openstack-cloud-provider
