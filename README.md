@@ -22,27 +22,29 @@ This plugin started as a fork of the Vagrant Rackspace provider.
 
 ```
 $ vagrant plugin install vagrant-openstack-cloud-provider
-$ vagrant box add dummy https://github.com/mat128/vagrant-openstack-cloud-provider/raw/master/dummy.box
 $ cat <<EOF > Vagrantfile
 require 'vagrant-openstack-cloud-provider'
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "dummy"
+
+  # This is a publicly available dummy box.
+  config.vm.box = "sharpie/dummy"
 
   config.vm.provider :openstack do |os|
-    os.username = "#{ENV['OS_USERNAME']}"
-    os.api_key  = "#{ENV['OS_PASSWORD']}"
+    os.username = "${OS_USERNAME}"
+    os.api_key  = "${OS_PASSWORD}"
     os.flavor   = /m1.tiny/
     os.image    = /Ubuntu/
-    os.endpoint = "#{ENV['OS_AUTH_URL']}/tokens"
+    os.endpoint = "${OS_AUTH_URL}/tokens"
     os.keypair_name = "" # Your keypair name
     os.ssh_username = "" # Your image SSH username
-    os.public_network_name = "" # Your Neutron network name
-    os.networks = %w(net1 net2 net3) # Additional neutron networks
-    os.tenant = "#{ENV['OS_TENANT_NAME'}"
-    os.region = "" # Region name, if necessary
+    os.public_network_name = "public" # Your Neutron network name
+    os.networks = %w() # Additional neutron networks
+    os.tenant = "${OS_TENANT_NAME}"
+    os.region = "${OS_REGION_NAME}"
   end
-end 
+end
+EOF
 $ vagrant up --provider=openstack
 ...
 ```
