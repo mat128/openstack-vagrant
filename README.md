@@ -21,75 +21,31 @@ This plugin started as a fork of the Vagrant Rackspace provider.
 ## Usage
 
 ```
-$ git clone https://github.com/mat128/vagrant-openstack-cloud-provider.git
-$ cd vagrant-openstack-cloud-provider
-$ gem build vagrant-openstack-cloud-provider.gemspec
-$ vagrant plugin install vagrant-openstack-cloud-provider-*.gem
-...
-$ vagrant up --provider=openstack
-...
-```
-
-Of course prior to doing this, you'll need to obtain an OpenStack-compatible
-box file for Vagrant.
-
-## Quick Start
-
-After installing the plugin (instructions above), the quickest way to get
-started is to actually use a dummy OpenStack box and specify all the details
-manually within a `config.vm.provider` block. So first, add the dummy
-box using any name you want:
-
-```
+$ vagrant plugin install vagrant-openstack-cloud-provider
 $ vagrant box add dummy https://github.com/mat128/vagrant-openstack-cloud-provider/raw/master/dummy.box
-...
-```
-
-And then make a Vagrantfile that looks like the following, filling in
-your information where necessary.
-
-```
+$ cat <<EOF > Vagrantfile
 require 'vagrant-openstack-cloud-provider'
 
 Vagrant.configure("2") do |config|
   config.vm.box = "dummy"
 
-  config.vm.provider :openstack do |os|    # e.g.
-    os.username = "YOUR USERNAME"          # "#{ENV['OS_USERNAME']}"
-    os.api_key  = "YOUR API KEY"           # "#{ENV['OS_PASSWORD']}" 
+  config.vm.provider :openstack do |os|
+    os.username = "#{ENV['OS_USERNAME']}"
+    os.api_key  = "#{ENV['OS_PASSWORD']}"
     os.flavor   = /m1.tiny/
     os.image    = /Ubuntu/
-    os.endpoint = "KEYSTONE AUTH URL"      # "#{ENV['OS_AUTH_URL']}/tokens"  
-    os.keypair_name = "YOUR KEYPAIR NAME"
-    os.ssh_username = "SSH USERNAME"
-    os.public_network_name = "NAME OF THE PUBLIC NETWORK"
-    os.networks = %w(net1 net2 net3)
-    os.tenant = "NAME OF THE TENANT"
-    os.region = "REGION_NAME"
+    os.endpoint = "#{ENV['OS_AUTH_URL']}/tokens"
+    os.keypair_name = "" # Your keypair name
+    os.ssh_username = "" # Your image SSH username
+    os.public_network_name = "" # Your Neutron network name
+    os.networks = %w(net1 net2 net3) # Additional neutron networks
+    os.tenant = "#{ENV['OS_TENANT_NAME'}"
+    os.region = "" # Region name, if necessary
   end
-end
+end 
+$ vagrant up --provider=openstack
+...
 ```
-
-And then run `vagrant up --provider=openstack`.
-
-This will start a tiny Ubuntu instance in your OpenStack installation within
-your tenant. And assuming your SSH information was filled in properly
-within your Vagrantfile, SSH and provisioning will work as well.
-
-Note that normally a lot of this boilerplate is encoded within the box
-file, but the box file used for the quick start, the "dummy" box, has
-no preconfigured defaults.
-
-## Box Format
-
-Every provider in Vagrant must introduce a custom box format. This
-provider introduces `openstack` boxes. You can view an example box in
-the [example_box/ directory](https://github.com/mat128/vagrant-openstack-cloud-provider/tree/master/example_box).
-That directory also contains instructions on how to build a box.
-
-The box format is basically just the required `metadata.json` file
-along with a `Vagrantfile` that does default settings for the
-provider-specific configuration for this provider.
 
 ## Configuration
 
@@ -146,8 +102,9 @@ chef, and puppet) to work!
 
 ## Development
 
-To work on the `vagrant-openstack` plugin, clone this repository out, and use
-[Bundler](http://gembundler.com) to get the dependencies:
+To work on the `vagrant-openstack-cloud-provider` plugin, clone this
+repository out, and use [Bundler](http://gembundler.com) to get the
+dependencies:
 
 ```
 $ bundle
