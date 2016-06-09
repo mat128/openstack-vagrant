@@ -143,7 +143,7 @@ module VagrantPlugins
         end
         protected
 
-        def ssh_responding?(env)
+        def ssh_is_responding?(env)
            begin
              # Wait for SSH to become available
              env[:ui].info(I18n.t("vagrant_openstack.waiting_for_ssh"))

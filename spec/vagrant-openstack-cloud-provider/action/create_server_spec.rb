@@ -21,7 +21,7 @@ describe VagrantPlugins::OpenStack::Action::CreateServer do
     end
   end
 
-  describe '#ssh_responding?' do
+  describe '#ssh_is_responding?' do
     subject {
       described_class.new(nil, nil)
     }
@@ -35,7 +35,7 @@ describe VagrantPlugins::OpenStack::Action::CreateServer do
       communicate.stub(:ready?).and_return(true)
       machine.stub(:communicate).and_return(communicate)
       env = { :ui => ui, :interrupted => false, :machine => machine }
-      subject.send('ssh_responding?', env)
+      subject.send('ssh_is_responding?', env)
     end
 
     it "should raise if ssh isn't available" do
@@ -43,7 +43,7 @@ describe VagrantPlugins::OpenStack::Action::CreateServer do
       communicate.stub(:ready?).and_return(false)
       machine.stub(:communicate).and_return(communicate)
       env = { :ui => ui, :interrupted => false, :machine => machine }
-      expect { subject.send('ssh_responding?', env) }.to raise_error(VagrantPlugins::OpenStack::Errors::SshUnavailable)
+      expect { subject.send('ssh_is_responding?', env) }.to raise_error(VagrantPlugins::OpenStack::Errors::SshUnavailable)
     end
   end
 
