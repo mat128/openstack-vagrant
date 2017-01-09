@@ -100,6 +100,7 @@ module VagrantPlugins
           end
 
           # Create the server
+          launch_start_time = Time.now
           server = env[:openstack_compute].servers.create(options)
 
           # Store the ID right away so we can track it
@@ -114,9 +115,12 @@ module VagrantPlugins
 
             # Wait for the server to be ready
             begin
-              (1..120).each do |n|
-                env[:ui].clear_line
-                env[:ui].report_progress(n, 120, true)
+              (1..config.instance_build_timeout).each do |n|
+                if config.report_progress
+                  env[:ui].clear_line
+                  env[:ui].report_progress(n, false)
+                end
+
                 server = env[:openstack_compute].servers.get(env[:machine].id)
                 break if self.server_to_be_available?(server)
                 sleep 1
@@ -128,6 +132,9 @@ module VagrantPlugins
             end
           end
 
+          env[:ui].info(I18n.t("vagrant_openstack.active",
+                        :elapsed => (Time.now - launch_start_time).floor))
+
           env[:machine].data_dir.join("cached_metadata").open("w+") do |f|
             f.write(server.to_json)
           end
@@ -136,7 +143,8 @@ module VagrantPlugins
             # Clear the line one more time so the progress is removed
             env[:ui].clear_line
             ssh_is_responding?(env)
-            env[:ui].info(I18n.t("vagrant_openstack.ready"))
+            env[:ui].info(I18n.t("vagrant_openstack.ready",
+                          :elapsed => (Time.now - launch_start_time).floor))
           end
 
           @app.call(env)
