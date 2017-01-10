@@ -14,8 +14,10 @@ en:
       Launching a server with the following settings...
     not_created: |-
       The server hasn't been created yet. Run `vagrant up` first.
+    active: |-
+      The server was built in %{elapsed} seconds!
     ready: |-
-      The server is ready!
+      The server is ready after %{elapsed} seconds!
     rsync_folder: |-
       Rsyncing folder: %{hostpath} => %{guestpath}
     waiting_for_build: |-

@@ -70,6 +70,14 @@ module VagrantPlugins
       # @return [Hash]
       attr_accessor :scheduler_hints
 
+      # @return [String]
+      attr_accessor :instance_build_timeout
+
+      # @return [Bool]
+      attr_accessor :report_progress
+      # alias_method :report_progress?, :report_progress
+
+
       def initialize
         @api_key  = UNSET_VALUE
         @endpoint = UNSET_VALUE
@@ -86,6 +94,8 @@ module VagrantPlugins
         @networks = UNSET_VALUE
         @tenant = UNSET_VALUE
         @scheduler_hints = UNSET_VALUE
+        @instance_build_timeout = UNSET_VALUE
+        @report_progress = UNSET_VALUE
       end
 
       def finalize!
@@ -111,6 +121,8 @@ module VagrantPlugins
         @networks = [@public_network_name] if @networks == UNSET_VALUE
         @tenant = nil if @tenant == UNSET_VALUE
         @scheduler_hints = {} if @scheduler_hints == UNSET_VALUE
+        @instance_build_timeout = 120 if @instance_build_timeout == UNSET_VALUE
+        @report_progress = true if @report_progress == UNSET_VALUE
       end
 
       def validate(machine)

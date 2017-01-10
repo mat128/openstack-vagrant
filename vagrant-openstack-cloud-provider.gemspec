@@ -15,7 +15,7 @@ Gem::Specification.new do |gem|
 
   gem.add_runtime_dependency "fog", "~> 1.22"
 
-  gem.add_development_dependency "rake"
+  gem.add_development_dependency "rake", '< 11.0'
   gem.add_development_dependency "rspec", "~> 2.13.0"
 
   gem.files         = `git ls-files`.split($/)
