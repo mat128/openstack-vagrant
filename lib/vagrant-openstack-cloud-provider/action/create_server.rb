@@ -115,15 +115,15 @@ module VagrantPlugins
 
             # Wait for the server to be ready
             begin
-              (1..config.instance_build_timeout).each do |n|
+              (1..config.instance_build_timeout / config.instance_build_status_check_interval).each do |n|
                 if config.report_progress
                   env[:ui].clear_line
-                  env[:ui].report_progress(n, false)
+                  env[:ui].report_progress(n * config.instance_build_status_check_interval, false)
                 end
 
                 server = env[:openstack_compute].servers.get(env[:machine].id)
                 break if self.server_to_be_available?(server)
-                sleep 1
+                sleep config.instance_build_status_check_interval
               end
               server = env[:openstack_compute].servers.get(env[:machine].id)
               raise unless self.server_to_be_available?(server)

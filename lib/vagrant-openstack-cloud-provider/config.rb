@@ -1,4 +1,5 @@
 require "vagrant"
+require "vagrant-openstack-cloud-provider/utils"
 
 module VagrantPlugins
   module OpenStack
@@ -70,13 +71,15 @@ module VagrantPlugins
       # @return [Hash]
       attr_accessor :scheduler_hints
 
-      # @return [String]
-      attr_accessor :instance_build_timeout
+      # @return [Integer]
+      casting_attr_accessor :instance_build_timeout, Integer
+
+      # @return [Integer]
+      casting_attr_accessor :instance_build_status_check_interval, Integer, greater_than(0)
 
       # @return [Bool]
       attr_accessor :report_progress
       # alias_method :report_progress?, :report_progress
-
 
       def initialize
         @api_key  = UNSET_VALUE
@@ -95,6 +98,7 @@ module VagrantPlugins
         @tenant = UNSET_VALUE
         @scheduler_hints = UNSET_VALUE
         @instance_build_timeout = UNSET_VALUE
+        @instance_build_status_check_interval = UNSET_VALUE
         @report_progress = UNSET_VALUE
       end
 
@@ -122,6 +126,7 @@ module VagrantPlugins
         @tenant = nil if @tenant == UNSET_VALUE
         @scheduler_hints = {} if @scheduler_hints == UNSET_VALUE
         @instance_build_timeout = 120 if @instance_build_timeout == UNSET_VALUE
+        @instance_build_status_check_interval = 1 if @instance_build_status_check_interval == UNSET_VALUE
         @report_progress = true if @report_progress == UNSET_VALUE
       end
 
