@@ -27,10 +27,11 @@ describe VagrantPlugins::OpenStack::Config do
     its(:tenant) { should be_nil }
     its(:scheduler_hints) { should eq({}) }
     its(:instance_build_timeout) { should eq(120) }
+    its(:instance_build_status_check_interval) { should eq(1) }
     its(:report_progress) { should be_true }
   end
 
-  describe "overriding defaults" do
+  describe "overriding defaults - strings" do
     [:api_key,
       :endpoint,
       :region,
@@ -45,12 +46,22 @@ describe VagrantPlugins::OpenStack::Config do
       :networks,
       :tenant,
       :scheduler_hints,
-      :instance_build_timeout,
       :report_progress].each do |attribute|
       it "should not default #{attribute} if overridden" do
         subject.send("#{attribute}=", "foo")
         subject.finalize!
         subject.send(attribute).should == "foo"
+      end
+    end
+  end
+
+  describe "overriding defaults - integers" do
+    [:instance_build_timeout,
+     :instance_build_status_check_interval].each do |attribute|
+      it "should not default #{attribute} if overridden" do
+        subject.send("#{attribute}=", 12345)
+        subject.finalize!
+        subject.send(attribute).should == 12345
       end
     end
   end
@@ -81,5 +92,27 @@ describe VagrantPlugins::OpenStack::Config do
     context "the username" do
       it "should error if not given"
     end
+
+    context "the numeric values" do
+      [:instance_build_timeout,
+       :instance_build_status_check_interval].each do |attribute|
+        it "should cast receiving value to an int" do
+          subject.send("#{attribute}=", "100")
+          subject.finalize!
+          subject.send(attribute).should == 100
+        end
+        it "should raise when given a wrong value" do
+          expect { subject.send("#{attribute}=", "huhu") }.to raise_error
+        end
+      end
+    end
+
+    context "the instance build status check interval should be a non-null positive integer" do
+      it "should cast receiving value to an int" do
+        expect { subject.send("#{:instance_build_status_check_interval}=", "0") }.to raise_error
+        expect { subject.send("#{:instance_build_status_check_interval}=", -1) }.to raise_error
+      end
+    end
+
   end
 end
