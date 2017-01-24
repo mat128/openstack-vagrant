@@ -1,7 +1,8 @@
 require 'spec_helper'
 require "vagrant-openstack-cloud-provider/config"
+require "vagrant-openstack-cloud-provider/utils"
 
-describe VagrantPlugins::OpenStack::Config do
+RSpec.describe VagrantPlugins::OpenStack::Config do
   describe "defaults" do
     let(:vagrant_public_key) { Vagrant.source_root.join("keys/vagrant.pub") }
 
@@ -11,26 +12,26 @@ describe VagrantPlugins::OpenStack::Config do
       end
     end
 
-    its(:api_key)  { should be_nil }
-    its(:endpoint) { should be_nil }
-    its(:region) { should be_nil }
-    its(:flavor)   { should eq(/m1.tiny/) }
-    its(:image)    { should eq(/cirros/) }
-    its(:server_name) { should be_nil }
-    its(:username) { should be_nil }
-    its(:keypair_name) { should be_nil }
-    its(:ssh_username) { should be_nil }
-    its(:user_data) { should eq("") }
-    its(:metadata) { should eq({}) }
-    its(:public_network_name) { should eq("public") }
-    its(:networks) { should eq(["public"]) }
-    its(:tenant) { should be_nil }
-    its(:scheduler_hints) { should eq({}) }
-    its(:instance_build_timeout) { should eq(120) }
-    its(:instance_build_status_check_interval) { should eq(1) }
-    its(:instance_ssh_timeout) { should eq(60) }
-    its(:instance_ssh_check_interval) { should eq(2) }
-    its(:report_progress) { should be_true }
+    it { is_expected.to have_attributes(api_key: nil) }
+    it { is_expected.to have_attributes(endpoint: nil) }
+    it { is_expected.to have_attributes(region: nil) }
+    it { is_expected.to have_attributes(flavor: /m1.tiny/) }
+    it { is_expected.to have_attributes(image: /cirros/) }
+    it { is_expected.to have_attributes(server_name: nil) }
+    it { is_expected.to have_attributes(username: nil) }
+    it { is_expected.to have_attributes(keypair_name: nil) }
+    it { is_expected.to have_attributes(ssh_username: nil) }
+    it { is_expected.to have_attributes(user_data: "") }
+    it { is_expected.to have_attributes(metadata: {}) }
+    it { is_expected.to have_attributes(public_network_name: "public") }
+    it { is_expected.to have_attributes(networks: ["public"]) }
+    it { is_expected.to have_attributes(tenant: nil) }
+    it { is_expected.to have_attributes(scheduler_hints: {}) }
+    it { is_expected.to have_attributes(instance_build_timeout: 120) }
+    it { is_expected.to have_attributes(instance_build_status_check_interval: 1) }
+    it { is_expected.to have_attributes(instance_ssh_timeout: 60) }
+    it { is_expected.to have_attributes(instance_ssh_check_interval: 2) }
+    it { is_expected.to have_attributes(report_progress: true) }
   end
 
   describe "overriding defaults - strings" do
@@ -52,7 +53,7 @@ describe VagrantPlugins::OpenStack::Config do
       it "should not default #{attribute} if overridden" do
         subject.send("#{attribute}=", "foo")
         subject.finalize!
-        subject.send(attribute).should == "foo"
+        expect(subject.send(attribute)).to eq("foo")
       end
     end
   end
@@ -65,7 +66,7 @@ describe VagrantPlugins::OpenStack::Config do
       it "should not default #{attribute} if overridden" do
         subject.send("#{attribute}=", 12345)
         subject.finalize!
-        subject.send(attribute).should == 12345
+        expect(subject.send(attribute)).to eq(12345)
       end
     end
   end
@@ -105,10 +106,10 @@ describe VagrantPlugins::OpenStack::Config do
         it "should cast #{attribute} to an int" do
           subject.send("#{attribute}=", "100")
           subject.finalize!
-          subject.send(attribute).should == 100
+          expect(subject.send(attribute)).to eq(100)
         end
         it "should raise when given a wrong value" do
-          expect { subject.send("#{attribute}=", "huhu") }.to raise_error
+          expect { subject.send("#{attribute}=", "huhu") }.to raise_error(ArgumentError)
         end
       end
     end
@@ -119,8 +120,8 @@ describe VagrantPlugins::OpenStack::Config do
        :instance_ssh_timeout,
        :instance_ssh_check_interval].each do |attribute|
         it "should cast #{attribute} to an int" do
-          expect { subject.send("#{attribute}=", "0") }.to raise_error
-          expect { subject.send("#{attribute}=", -1) }.to raise_error
+          expect { subject.send("#{attribute}=", "0") }.to raise_error(InvalidValue)
+          expect { subject.send("#{attribute}=", -1) }.to raise_error(InvalidValue)
         end
       end
     end
