@@ -28,6 +28,8 @@ describe VagrantPlugins::OpenStack::Config do
     its(:scheduler_hints) { should eq({}) }
     its(:instance_build_timeout) { should eq(120) }
     its(:instance_build_status_check_interval) { should eq(1) }
+    its(:instance_ssh_timeout) { should eq(60) }
+    its(:instance_ssh_check_interval) { should eq(2) }
     its(:report_progress) { should be_true }
   end
 
@@ -57,7 +59,9 @@ describe VagrantPlugins::OpenStack::Config do
 
   describe "overriding defaults - integers" do
     [:instance_build_timeout,
-     :instance_build_status_check_interval].each do |attribute|
+     :instance_build_status_check_interval,
+     :instance_ssh_timeout,
+     :instance_ssh_check_interval].each do |attribute|
       it "should not default #{attribute} if overridden" do
         subject.send("#{attribute}=", 12345)
         subject.finalize!
@@ -95,8 +99,10 @@ describe VagrantPlugins::OpenStack::Config do
 
     context "the numeric values" do
       [:instance_build_timeout,
-       :instance_build_status_check_interval].each do |attribute|
-        it "should cast receiving value to an int" do
+       :instance_build_status_check_interval,
+       :instance_ssh_timeout,
+       :instance_ssh_check_interval].each do |attribute|
+        it "should cast #{attribute} to an int" do
           subject.send("#{attribute}=", "100")
           subject.finalize!
           subject.send(attribute).should == 100
@@ -107,12 +113,16 @@ describe VagrantPlugins::OpenStack::Config do
       end
     end
 
-    context "the instance build status check interval should be a non-null positive integer" do
-      it "should cast receiving value to an int" do
-        expect { subject.send("#{:instance_build_status_check_interval}=", "0") }.to raise_error
-        expect { subject.send("#{:instance_build_status_check_interval}=", -1) }.to raise_error
+    context "non-null positive integers" do
+      [:instance_build_timeout,
+       :instance_build_status_check_interval,
+       :instance_ssh_timeout,
+       :instance_ssh_check_interval].each do |attribute|
+        it "should cast #{attribute} to an int" do
+          expect { subject.send("#{attribute}=", "0") }.to raise_error
+          expect { subject.send("#{attribute}=", -1) }.to raise_error
+        end
       end
     end
-
   end
 end

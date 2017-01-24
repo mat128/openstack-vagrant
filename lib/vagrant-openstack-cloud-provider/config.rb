@@ -72,10 +72,16 @@ module VagrantPlugins
       attr_accessor :scheduler_hints
 
       # @return [Integer]
-      casting_attr_accessor :instance_build_timeout, Integer
+      casting_attr_accessor :instance_build_timeout, Integer, greater_than(0)
 
       # @return [Integer]
       casting_attr_accessor :instance_build_status_check_interval, Integer, greater_than(0)
+
+      # @return [Integer]
+      casting_attr_accessor :instance_ssh_timeout, Integer, greater_than(0)
+
+      # @return [Integer]
+      casting_attr_accessor :instance_ssh_check_interval, Integer, greater_than(0)
 
       # @return [Bool]
       attr_accessor :report_progress
@@ -99,6 +105,8 @@ module VagrantPlugins
         @scheduler_hints = UNSET_VALUE
         @instance_build_timeout = UNSET_VALUE
         @instance_build_status_check_interval = UNSET_VALUE
+        @instance_ssh_timeout = UNSET_VALUE
+        @instance_ssh_check_interval = UNSET_VALUE
         @report_progress = UNSET_VALUE
       end
 
@@ -127,6 +135,9 @@ module VagrantPlugins
         @scheduler_hints = {} if @scheduler_hints == UNSET_VALUE
         @instance_build_timeout = 120 if @instance_build_timeout == UNSET_VALUE
         @instance_build_status_check_interval = 1 if @instance_build_status_check_interval == UNSET_VALUE
+        @instance_ssh_timeout = 60 if @instance_ssh_timeout == UNSET_VALUE
+        @instance_ssh_check_interval = 2 if @instance_ssh_check_interval == UNSET_VALUE
+
         @report_progress = true if @report_progress == UNSET_VALUE
       end
 

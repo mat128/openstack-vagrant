@@ -23,7 +23,7 @@ module VagrantPlugins
 
         def call(env)
           # Get the configs
-          config   = env[:machine].provider_config
+          config = env[:machine].provider_config
 
           if !config.networks.nil? and config.networks.any?
             @logger.info("Connecting to OpenStack Network...")
@@ -142,27 +142,30 @@ module VagrantPlugins
           unless env[:interrupted]
             # Clear the line one more time so the progress is removed
             env[:ui].clear_line
-            ssh_is_responding?(env)
+            ssh_is_responding?(env,
+                               timeout=config.instance_ssh_timeout,
+                               sleep_interval=config.instance_ssh_check_interval)
             env[:ui].info(I18n.t("vagrant_openstack.ready",
                           :elapsed => (Time.now - launch_start_time).floor))
           end
 
           @app.call(env)
         end
+
         protected
 
-        def ssh_is_responding?(env)
+        def ssh_is_responding?(env, timeout, sleep_interval)
            begin
              # Wait for SSH to become available
              env[:ui].info(I18n.t("vagrant_openstack.waiting_for_ssh"))
-             (1..60).each do |n|
+             (1..timeout / sleep_interval).each do |n|
                begin
                  # If we're interrupted then just back out
                  break if env[:interrupted]
                  break if env[:machine].communicate.ready?
                rescue Errno::ENETUNREACH
                end
-               sleep 2
+               sleep sleep_interval
              end
              raise unless env[:machine].communicate.ready?
            rescue
