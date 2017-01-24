@@ -25,18 +25,6 @@ module VagrantPlugins
           # Get the configs
           config = env[:machine].provider_config
 
-          if !config.networks.nil? and config.networks.any?
-            @logger.info("Connecting to OpenStack Network...")
-            env[:openstack_network] = Fog::Network.new({
-                          :provider => :openstack,
-                          :openstack_region => config.region,
-                          :openstack_username => config.username,
-                          :openstack_api_key => config.api_key,
-                          :openstack_auth_url => config.endpoint,
-                          :openstack_tenant => config.tenant
-                      })
-          end
-
           # Find the flavor
           env[:ui].info(I18n.t("vagrant_openstack.finding_flavor"))
           flavor = find_matching(env[:openstack_compute].flavors.all, config.flavor)

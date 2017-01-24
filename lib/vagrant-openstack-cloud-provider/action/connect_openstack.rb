@@ -1,5 +1,6 @@
 require "fog"
 require "log4r"
+require 'promise'
 
 module VagrantPlugins
   module OpenStack
@@ -14,19 +15,30 @@ module VagrantPlugins
         end
 
         def call(env)
-          # Get the configs
-          config   = env[:machine].provider_config
-          @logger.info("Connecting to OpenStack Compute...")
-          env[:openstack_compute] = Fog::Compute.new({
-                        :provider => :openstack,
-                        :openstack_region => config.region,
-                        :openstack_username => config.username,
-                        :openstack_api_key => config.api_key,
-                        :openstack_auth_url => config.endpoint,
-                        :openstack_tenant => config.tenant
-                    })
+          config = env[:machine].provider_config
+
+          openstack_options = {
+              :provider => :openstack,
+              :openstack_region => config.region,
+              :openstack_username => config.username,
+              :openstack_api_key => config.api_key,
+              :openstack_auth_url => config.endpoint,
+              :openstack_tenant => config.tenant
+          }
+
+          env[:openstack_compute] = get_fog_promise('Compute', openstack_options)
+          env[:openstack_network] = get_fog_promise('Network', openstack_options)
 
           @app.call(env)
+        end
+
+        private
+
+        def get_fog_promise(service_name, openstack_options)
+          promise {
+            @logger.info("Initializing OpenStack #{service_name}...")
+            Fog.const_get(service_name).new(openstack_options)
+          }
         end
       end
     end
