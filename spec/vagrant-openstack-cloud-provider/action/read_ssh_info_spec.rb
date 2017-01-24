@@ -1,26 +1,26 @@
 require 'spec_helper'
 require 'vagrant-openstack-cloud-provider/action/read_ssh_info_from_api'
 
-describe VagrantPlugins::OpenStack::Action::ReadSSHInfoFromAPI do
+RSpec.describe VagrantPlugins::OpenStack::Action::ReadSSHInfoFromAPI do
   describe '#call' do
     it "passes proper parameters to read_ssh_info and puts them in machine_ssh_info" do
       app = lambda { |only_one_parameter| }
       env = {:openstack_compute => :my_compute, :machine => :my_machine}
 
       subject = described_class.new(app, nil)
-      subject.should_receive(:read_ssh_info).with(:my_compute, :my_machine).and_return(:my_ssh_info)
+      expect(subject).to receive(:read_ssh_info).with(:my_compute, :my_machine).and_return(:my_ssh_info)
 
       subject.call(env)
-      env[:machine_ssh_info].should == :my_ssh_info
+      expect(env[:machine_ssh_info]).to eq(:my_ssh_info)
     end
 
     it "calls app.call with the right env" do
       app = double()
       env = {:openstack_compute => nil, :machine => nil}
-      app.should_receive(:call).with(env)
+      expect(app).to receive(:call).with(env)
 
       subject = described_class.new(app, nil)
-      subject.stub(:read_ssh_info)
+      expect(subject).to receive(:read_ssh_info)
       subject.call(env)
     end
   end
@@ -33,48 +33,45 @@ describe VagrantPlugins::OpenStack::Action::ReadSSHInfoFromAPI do
     let(:machine) { double }
     let(:openstack) { double }
     let(:servers) { double }
-    let(:provider_config) do
-      mock = double
-      mock.stub(:public_network_name => "public")
-      mock.stub(:ssh_username => "username")
-      mock
-    end
+    let(:invalid_openstack_server_instance) { double }
+    let(:openstack_server_instance) { double }
+    let(:provider_config) { double(:config,
+                                   :public_network_name => "public",
+                                   :ssh_username => "username")
+    }
 
     it "should return nil if machine is nil" do
-      machine.stub(:id).and_return(nil)
-      subject.read_ssh_info(nil, machine).should == nil
+      expect(machine).to receive(:id).and_return(nil)
+      expect(subject.read_ssh_info(nil, machine)).to eq(nil)
     end
 
     it "assigns machine_id to nil and returns nil if openstack returns nil" do
-      machine.stub(:id => "anything")
-      machine.stub(:id=)
+      expect(machine).to receive(:id).at_least(:once).and_return("anything")
+      expect(machine).to receive(:id=).at_least(:once)
 
-      servers.should_receive(:get).and_return(nil)
-      openstack.should_receive(:servers).and_return(servers)
+      expect(servers).to receive(:get).and_return(nil)
+      expect(openstack).to receive(:servers).and_return(servers)
 
-      subject.read_ssh_info(openstack, machine).should == nil
+      expect(subject.read_ssh_info(openstack, machine)).to eq(nil)
     end
 
     it "returns nil when something bad happens while fetching address" do
-      provider_config.stub(:ssh_username)
-      machine.stub(:id => "anything")
-      machine.stub(:provider_config => provider_config)
+      expect(machine).to receive(:id).at_least(:once).and_return("anything")
+      expect(machine).to receive(:provider_config).and_return(provider_config)
 
-      invalid_openstack_server_instance = double()
-      invalid_openstack_server_instance.should_receive(:addresses).and_raise(StandardError)
-      servers.should_receive(:get).and_return(invalid_openstack_server_instance)
-      openstack.should_receive(:servers).and_return(servers)
+      expect(invalid_openstack_server_instance).to receive(:addresses).and_raise(StandardError)
+      expect(servers).to receive(:get).and_return(invalid_openstack_server_instance)
+      expect(openstack).to receive(:servers).and_return(servers)
 
       result = subject.read_ssh_info(openstack, machine)
 
-      result[:port].should == 22
-      result[:host].should == nil
+      expect(result).to eq({:port => 22, :username => 'username', :host => nil})
     end
 
     it "returns a proper ssh_info hash" do
-      provider_config.stub(:ssh_username => "root")
-      machine.stub(:id => "anything")
-      machine.stub(:provider_config => provider_config)
+      expect(provider_config).to receive(:ssh_username).and_return("root")
+      expect(machine).to receive(:id).at_least(:once).and_return("anything")
+      expect(machine).to receive(:provider_config).and_return(provider_config)
 
       valid_server_addresses = {
         "public" => [
@@ -83,23 +80,21 @@ describe VagrantPlugins::OpenStack::Action::ReadSSHInfoFromAPI do
         ]
       }
 
-      openstack_server_instance = double()
-      openstack_server_instance.should_receive(:addresses).and_return(valid_server_addresses)
+      expect(openstack_server_instance).to receive(:addresses).and_return(valid_server_addresses)
 
-      servers.should_receive(:get).and_return(openstack_server_instance)
-      openstack.should_receive(:servers).and_return(servers)
+      expect(servers).to receive(:get).and_return(openstack_server_instance)
+      expect(openstack).to receive(:servers).and_return(servers)
 
       result = subject.read_ssh_info(openstack, machine)
 
-      result[:port].should == 22
-      result[:host].should == "server2.example.org"
-      result[:username].should == "root"
+      expect(result).to eq({:port => 22, :username => "root", :host => "server2.example.org"})
     end
 
     it "uses the public network name from the config" do
-      provider_config.stub(:public_network_name => "my_custom_public_network_name")
-      machine.stub(:id => "anything")
-      machine.stub(:provider_config => provider_config)
+      expect(provider_config).to receive(:public_network_name).and_return("my_custom_public_network_name")
+      expect(machine).to receive(:id).at_least(:once).and_return("anything")
+
+      expect(machine).to receive(:provider_config).and_return(provider_config)
 
       valid_server_addresses = {
         "my_custom_public_network_name" => [
@@ -108,15 +103,14 @@ describe VagrantPlugins::OpenStack::Action::ReadSSHInfoFromAPI do
         ]
       }
 
-      openstack_server_instance = double()
-      openstack_server_instance.should_receive(:addresses).and_return(valid_server_addresses)
+      expect(openstack_server_instance).to receive(:addresses).and_return(valid_server_addresses)
 
-      servers.should_receive(:get).and_return(openstack_server_instance)
-      openstack.should_receive(:servers).and_return(servers)
+      expect(servers).to receive(:get).and_return(openstack_server_instance)
+      expect(openstack).to receive(:servers).and_return(servers)
 
       result = subject.read_ssh_info(openstack, machine)
 
-      result[:host].should == "server2.example.org"
+      expect(result).to eq({:port => 22, :username => "username", :host => "server2.example.org"})
     end
   end
 end
