@@ -26,8 +26,11 @@ module VagrantPlugins
               :openstack_tenant => config.tenant
           }
 
-          env[:openstack_compute] = get_fog_promise('Compute', openstack_options)
-          env[:openstack_network] = get_fog_promise('Network', openstack_options)
+          $openstack_compute ||= get_fog_promise('Compute', openstack_options)
+          $openstack_network ||= get_fog_promise('Network', openstack_options)
+
+          env[:openstack_compute] = $openstack_compute
+          env[:openstack_network] = $openstack_network
 
           @app.call(env)
         end
@@ -35,7 +38,7 @@ module VagrantPlugins
         private
 
         def get_fog_promise(service_name, openstack_options)
-          promise {
+          Kernel.promise {
             @logger.info("Initializing OpenStack #{service_name}...")
             Fog.const_get(service_name).new(openstack_options)
           }

@@ -21,6 +21,11 @@ RSpec.describe VagrantPlugins::OpenStack::Action::ConnectOpenStack do
       described_class.new(app, nil)
     }
 
+    after(:each) {
+      $openstack_compute = nil
+      $openstack_network = nil
+    }
+
     it "should new members in env" do
       expect(app).to receive(:call)
       expect(machine).to receive(:provider_config).and_return(config)
@@ -47,6 +52,14 @@ RSpec.describe VagrantPlugins::OpenStack::Action::ConnectOpenStack do
       end
     end
 
+    it "should memoize the fog call" do
+      expect(app).to receive(:call).at_least(:once)
+      expect(machine).to receive(:provider_config).at_least(:once).and_return(config)
+      env = { :machine => machine }
+
+      expect(Kernel).to receive(:promise).twice.and_return('TEST') # 1x compute, 1x network
+      10.times { subject.call(env) }
+    end
   end
 end
 
