@@ -122,10 +122,11 @@ module VagrantPlugins
 
           env[:ui].info(I18n.t("vagrant_openstack.active",
                         :elapsed => (Time.now - launch_start_time).floor))
-
           env[:machine].data_dir.join("cached_metadata").open("w+") do |f|
             f.write(server.to_json)
           end
+          public_ip_address = server.addresses[config.public_network_name].last['addr'] rescue nil
+          env[:ui].info("Instance IP address: #{public_ip_address}")
 
           unless env[:interrupted]
             # Clear the line one more time so the progress is removed
