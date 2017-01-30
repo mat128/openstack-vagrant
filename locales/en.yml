@@ -38,7 +38,7 @@ en:
         to find out what can be done about this state, or `vagrant destroy`
         if you want to start over.
       ssh_unavailable: |-
-        The server has been created successfully but it refuses incomming
+        The server has been created successfully but it refuses incoming
         ssh connections.
       no_matching_flavor: |-
         No matching flavor was found! Please check your flavor setting
