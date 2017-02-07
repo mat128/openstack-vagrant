@@ -2,6 +2,9 @@ require 'spec_helper'
 require 'vagrant-openstack-cloud-provider/errors'
 require 'vagrant-openstack-cloud-provider/action/create_server'
 
+I18n.load_path << File.expand_path("locales/en.yml", Pathname.new(File.expand_path("../../../../", __FILE__)))
+I18n.reload!
+
 RSpec.describe VagrantPlugins::OpenStack::Action::CreateServer do
   describe '#server_to_be_available?' do
     subject {
@@ -45,7 +48,23 @@ RSpec.describe VagrantPlugins::OpenStack::Action::CreateServer do
       expect(machine).to receive(:communicate).at_least(:once).and_return(communicate)
 
       env = { :ui => ui, :interrupted => false, :machine => machine }
-      expect { subject.send('ssh_is_responding?', env, timeout=0.005, sleep_interval=0.001) }.to raise_error(VagrantPlugins::OpenStack::Errors::SshUnavailable)
+      expect { subject.send('ssh_is_responding?', env, timeout=0.005, sleep_interval=0.001) }.
+          to raise_error(VagrantPlugins::OpenStack::Errors::SshUnavailable).
+              with_message(I18n.t('vagrant_openstack.errors.ssh_unavailable',
+                                  :error => I18n.t('vagrant_openstack.errors.ssh_wait_timeout',
+                                                   :seconds => 0.005)))
+    end
+
+    it 'should show any error raised' do
+      expect(ui).to receive(:info).at_least(:once)
+      expect(communicate).to receive(:ready?).once.and_raise(Exception.new("waaaat"))
+      expect(machine).to receive(:communicate).at_least(:once).and_return(communicate)
+
+      env = { :ui => ui, :interrupted => false, :machine => machine }
+      expect { subject.send('ssh_is_responding?', env, timeout=0.005, sleep_interval=0.001) }.
+          to raise_error(VagrantPlugins::OpenStack::Errors::SshUnavailable).
+              with_message(I18n.t('vagrant_openstack.errors.ssh_unavailable',
+                                  :error => 'waaaat'))
     end
   end
 

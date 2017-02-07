@@ -156,9 +156,12 @@ module VagrantPlugins
                end
                sleep sleep_interval
              end
-             raise unless env[:machine].communicate.ready?
-           rescue
-             raise Errors::SshUnavailable
+             unless env[:machine].communicate.ready?
+                raise Errors::SshWaitTimeout.new(
+                    :seconds => sleep_interval * (timeout / sleep_interval))
+             end
+           rescue Exception => msg
+             raise Errors::SshUnavailable.new(:error => msg)
            end
         end
 

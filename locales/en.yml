@@ -37,9 +37,10 @@ en:
         state: '%{state}', instead of properly booting. Run `vagrant status`
         to find out what can be done about this state, or `vagrant destroy`
         if you want to start over.
+      ssh_wait_timeout: |-
+        The server is not ready for SSH communication after %{seconds} seconds.
       ssh_unavailable: |-
-        The server has been created successfully but it refuses incoming
-        ssh connections.
+        The server's SSH failed to become available because: %{error}.
       no_matching_flavor: |-
         No matching flavor was found! Please check your flavor setting
         to make sure you have a valid flavor chosen.
