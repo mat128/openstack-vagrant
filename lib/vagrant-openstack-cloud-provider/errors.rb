@@ -11,6 +11,10 @@ module VagrantPlugins
         error_key(:create_bad_state)
       end
 
+      class SshWaitTimeout < VagrantOpenStackError
+        error_key(:ssh_wait_timeout)
+      end
+
       class SshUnavailable < VagrantOpenStackError
         error_key(:ssh_unavailable)
       end
