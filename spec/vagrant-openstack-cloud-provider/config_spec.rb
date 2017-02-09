@@ -29,7 +29,7 @@ RSpec.describe VagrantPlugins::OpenStack::Config do
     it { is_expected.to have_attributes(scheduler_hints: {}) }
     it { is_expected.to have_attributes(instance_build_timeout: 120) }
     it { is_expected.to have_attributes(instance_build_status_check_interval: 1) }
-    it { is_expected.to have_attributes(instance_ssh_timeout: 60) }
+    it { is_expected.to have_attributes(instance_ssh_timeout: 120) }
     it { is_expected.to have_attributes(instance_ssh_check_interval: 2) }
     it { is_expected.to have_attributes(report_progress: true) }
   end
