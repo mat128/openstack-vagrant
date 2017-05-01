@@ -14,6 +14,7 @@ Gem::Specification.new do |gem|
   gem.homepage      = "http://www.vagrantup.com"
 
   gem.add_runtime_dependency "fog", "~> 1.22"
+  gem.add_runtime_dependency "fog-core", "~> 1.43.0"
   gem.add_runtime_dependency "promise", "~> 0.3.1"
 
   gem.add_development_dependency "rake", '< 11.0'
