@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'vagrant-openstack-cloud-provider/errors'
 require 'vagrant-openstack-cloud-provider/action/connect_openstack'
-require "fog"
+require "fog/openstack"
 
 RSpec.describe VagrantPlugins::OpenStack::Action::ConnectOpenStack do
   describe '#call?' do

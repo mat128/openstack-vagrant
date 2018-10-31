@@ -1,4 +1,4 @@
-require "fog"
+require "fog/openstack"
 require "log4r"
 require 'promise'
 
